@@ -68,13 +68,13 @@ public class Login {
     private SessionForm sessionForm;
 
     @POST
-    @Path("/openid")
+    @Path("/openid/implicitflow")
     @Operation(summary = "OpenID connect callback", description = "Verifies an openID claim and starts a session for the user")
     @ApiResponse(responseCode = "200", description = "OK")
     @ApiResponse(responseCode = "400", description = "Bad request")
     @ApiResponse(responseCode = "500", description = "Internal error")
     @Tag(name = "login")
-    public void openIdLogin(@FormParam("error") String error, @FormParam("id_token") String idToken) throws IOException {
+    public void openIdLoginImplicitFlow(@FormParam("error") String error, @FormParam("id_token") String idToken) throws IOException {
         ConfigurationHelper config = ConfigurationHelper.getInstance();
         String clientID = config.getOIDCClientID();
         String nonce = (String) servletRequest.getSession().getAttribute("openIDNonce");
