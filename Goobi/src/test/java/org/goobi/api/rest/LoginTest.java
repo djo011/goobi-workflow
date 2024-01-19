@@ -140,12 +140,12 @@ public class LoginTest extends AbstractTest {
     }
 
     @Test
-    public void testOpenIdErrorLogin() throws Exception {
-        login.openIdLogin("error", "id");
+    public void testOpenIdErrorLoginIF() throws Exception {
+        login.openIdLoginImplicitFlow("error", "id");
     }
 
     @Test
-    public void testOpenIdSuccessLogin() throws Exception {
-        login.openIdLogin(null, "id");
+    public void testOpenIdSuccessLoginIF() throws Exception {
+        login.openIdLoginImplicitFlow(null, "id");
     }
 }
