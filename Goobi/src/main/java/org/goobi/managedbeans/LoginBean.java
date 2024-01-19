@@ -452,8 +452,6 @@ public class LoginBean implements Serializable {
     		openIDLoginImplicitFlow();
     	case "AuthorizationCodeFlow":
     		openIDLoginAuthorizationCodeFlow();
-    	case "":
-    		openIDLoginImplicitFlow();
     	}
     }
 
