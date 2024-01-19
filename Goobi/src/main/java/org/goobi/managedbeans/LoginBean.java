@@ -378,31 +378,45 @@ public class LoginBean implements Serializable {
         ec.redirect(Helper.getBaseUrl() + "/api/login/header");
     }
 
-    public void openIDLogin() {
-        ConfigurationHelper config = ConfigurationHelper.getInstance();
+    public void openIDLoginImplicitFlow() {
+    	ConfigurationHelper config = ConfigurationHelper.getInstance();
         ExternalContext ec = FacesContextHelper.getCurrentFacesContext().getExternalContext();
-        byte[] secureBytes = new byte[64];
-        new SecureRandomNumberGenerator().getSecureRandom().nextBytes(secureBytes);
-        String nonce = Base64.getUrlEncoder().encodeToString(secureBytes);
-        HttpSession session = (HttpSession) ec.getSession(false);
-        session.setAttribute("openIDNonce", nonce);
-        String applicationPath = ec.getApplicationContextPath();
-        HttpServletRequest hreq = (HttpServletRequest) ec.getRequest();
-        try {
-            URIBuilder builder = new URIBuilder(config.getOIDCAuthEndpoint());
-            builder.addParameter("client_id", config.getOIDCClientID());
-            builder.addParameter("response_type", "id_token");
-            builder.addParameter("redirect_uri",
-                    hreq.getScheme() + "://" + hreq.getServerName() + ":" + hreq.getServerPort() + applicationPath + "/api/login/openid");
-            builder.addParameter("response_mode", "form_post");
-            builder.addParameter("scope", "openid");
-            builder.addParameter("nonce", nonce);
-
-            ec.redirect(builder.build().toString());
-        } catch (URISyntaxException | IOException e) {
-            // TODO Auto-generated catch block
-            log.error(e);
-        }
+        
+    	byte[] secureBytes = new byte[64];
+    	new SecureRandomNumberGenerator().getSecureRandom().nextBytes(secureBytes);
+    	String nonce = Base64.getUrlEncoder().encodeToString(secureBytes);
+    	HttpSession session = (HttpSession) ec.getSession(false);
+    	session.setAttribute("openIDNonce", nonce);
+    	String applicationPath = ec.getApplicationContextPath();
+    	HttpServletRequest hreq = (HttpServletRequest) ec.getRequest();
+    	try {
+    		URIBuilder builder = new URIBuilder(config.getOIDCAuthEndpoint());
+    		builder.addParameter("client_id", config.getOIDCClientID());
+    		builder.addParameter("response_type", "id_token");
+    		builder.addParameter("redirect_uri",
+    				hreq.getScheme() + "://" + hreq.getServerName() + ":" + hreq.getServerPort() + applicationPath + "/api/login/openid/implicitflow");
+    		builder.addParameter("response_mode", "form_post");
+    		builder.addParameter("scope", "openid");
+    		builder.addParameter("nonce", nonce);
+    		
+    		ec.redirect(builder.build().toString());
+    	} catch (URISyntaxException | IOException e) {
+    		// TODO Auto-generated catch block
+    		log.error(e);
+    	}
+    }
+    
+    public void openIDLogin() {
+    	ConfigurationHelper config = ConfigurationHelper.getInstance();
+    	
+    	String flowType = config.getOIDCFlowType();
+    	
+    	switch(flowType) {
+    	case "ImplicitFlow":
+    		openIDLoginImplicitFlow();
+    	case "":
+    		openIDLoginImplicitFlow();
+    	}
     }
 
     private void AlteBilderAufraeumen() {
